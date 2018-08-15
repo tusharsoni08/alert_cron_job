@@ -103,7 +103,7 @@ function pushNotification(userId) {
 	  headers:{
 	    'Content-Type': 'application/json'
 	  }
-	}).then(res => {res.json(); console.log(res.json())})
+	}).then(res => console.log(res.json()))
 	.catch(error => console.error('Error:', error))
 	.then(response => console.log('Success:', response));
 }
