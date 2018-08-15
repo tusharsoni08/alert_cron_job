@@ -49,7 +49,7 @@ app.get('/', function (req, res) {
 	                        let running_status = $('td[id=qrdPosSttsMsg]').text().split('\n')[1];
 	                        let remaining_dist = parseInt($('span[class=kilometers]').text().split(' ')[1]);
 
-	                        if(running_status.toLowerCase() == "Yet to arrive".toLowerCase()){
+	                        if(running_status != undefined && running_status.toLowerCase() == "Yet to arrive".toLowerCase()){
 	                            if(remaining_dist < 50){
 	                                pushNotification(doc.id);
 	                                db.collection("users").doc(doc.id).delete().then(function() {
