@@ -37,8 +37,9 @@ app.get('/', function (req, res) {
 	        if(!snapshot.empty){
 	            snapshot.forEach(doc => {
 	                let user_data = doc.data();
+	                console.log(user_data)
 	                let options = {
-	                    uri: process.env['ENQUIRY_URL'] + user_data['train_number'] + '&startDate=' + formatDate(user_data['boarding_date'].toDate()) + '&journeyStn=' + user_data['station_code'] + '&journeyDate=' + formatDate(user_data['arrival_date'].toDate()) + '&boardDeboard=0&langFile=props.en-us',
+	                    uri: process.env['ENQUIRY_URL'] + user_data['train_number'] + '&startDate=' + user_data['boarding_date'] + '&journeyStn=' + user_data['station_code'] + '&journeyDate=' + user_data['arrival_date'] + '&boardDeboard=0&langFile=props.en-us',
 	                    transform: function (body) {
 	                        return cheerio.load(body);
 	                    }
@@ -79,18 +80,6 @@ app.get('/', function (req, res) {
 	        res.send('Error')
 	    });
 })
-
-function formatDate(date) {
-    let d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-
-    return [day, month, year].join('/');
-}
 
 function pushNotification(userId) {
 	console.log('Sending push notification ...')
