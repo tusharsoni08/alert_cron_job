@@ -2,6 +2,8 @@ const admin = require('firebase-admin');
 const rp = require('request-promise');
 const cheerio = require('cheerio');
 const express = require('express');
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
 
 const app = express();
 app.listen(process.env.PORT, ()=>{console.log('Server Started ...')});
