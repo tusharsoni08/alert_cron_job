@@ -50,8 +50,8 @@ app.get('/', function (req, res) {
 	                        let remaining_dist = parseInt($('span[class=kilometers]').text().split(' ')[1]);
 
 	                        if(running_status != undefined && running_status.toLowerCase() == "Yet to arrive".toLowerCase()){
-	                            if(remaining_dist < 50){
-	                                pushNotification(doc.id);
+	                            if(remaining_dist < 50 && remaining_dist > 0){
+	                                pushNotification(doc.id, remaining_dist.toString());
 	                                db.collection("users").doc(doc.id).delete().then(function() {
 	                                    console.log("User data successfully deleted.");
 	                                }).catch(function(error) {
@@ -85,10 +85,10 @@ app.get('/', function (req, res) {
 	    });
 })
 
-function pushNotification(userId) {
+function pushNotification(userId, remaining_dist) {
 	console.log('Sending push notification ...')
 	let url = process.env['PUSH_URL'];
-	let data = {userId: userId};
+	let data = {userId: userId, remainingDist : remaining_dist};
 
 	fetch(url, {
 	  method: 'POST',
