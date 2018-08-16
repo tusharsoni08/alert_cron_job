@@ -37,7 +37,6 @@ app.get('/', function (req, res) {
 	        if(!snapshot.empty){
 	            snapshot.forEach(doc => {
 	                let user_data = doc.data();
-	                console.log(user_data)
 	                let options = {
 	                    uri: process.env['ENQUIRY_URL'] + user_data['train_number'] + '&startDate=' + user_data['boarding_date'] + '&journeyStn=' + user_data['station_code'] + '&journeyDate=' + user_data['arrival_date'] + '&boardDeboard=0&langFile=props.en-us',
 	                    transform: function (body) {
@@ -62,20 +61,25 @@ app.get('/', function (req, res) {
 	                            	if(remaining_dist != user_data['remaining_dist']){
 	                            		let userRef = db.collection('users').doc(doc.id);
 	                                	let updateDistance = userRef.update({ remaining_dist: remaining_dist });
-	                                	console.log("Successfully Updated the remaining distance.");
+	                                	console.log("Successfully updated the remaining distance.");
 	                            	}
 	                            }
 	                        }
 	                    })
+	                    .then(function(){
+	                    	res.send('Ok');
+	                    })
 	                    .catch((err) => {
-	                        console.log('Error fetching train info', err);
+	                    	res.send('Error');
+	                    	console.log('Error in fetching or processing of train info', err);
 	                    });
 	            });
 	        }
-	    }).then(function(){
-	        res.send('Ok');
-	        console.timeEnd('Process-time');
-	    }).catch(err => {
+	    })
+	    .then(function(){
+	    	console.timeEnd('Process-time');
+	    })
+	    .catch(err => {
 	        console.log('Error getting documents', err);
 	        res.send('Error')
 	    });
@@ -94,12 +98,7 @@ function pushNotification(userId) {
 	  }
 	})
 	.then(function(response) {
-		console.log(response.statusText);
-		response.json();
-	})
-	.then(function(responseAsJson) {
-	  // Do stuff with the JSON
-	  console.log(responseAsJson);
+		console.log(response.status + ' : '+response.statusText);
 	})
 	.catch(error => console.error('Error:', error));
 }
