@@ -51,7 +51,7 @@ app.get('/', function (req, res) {
 
 	                        if(running_status != undefined && running_status.toLowerCase() == "Yet to arrive".toLowerCase()){
 	                            if(remaining_dist < 50 && remaining_dist > 0){
-	                                pushNotification(doc.id, remaining_dist.toString());
+	                                pushNotification(doc.id, remaining_dist.toString(), user_data['station_name']);
 	                                db.collection("users").doc(doc.id).delete().then(function() {
 	                                    console.log("User data successfully deleted.");
 	                                }).catch(function(error) {
@@ -85,10 +85,14 @@ app.get('/', function (req, res) {
 	    });
 })
 
-function pushNotification(userId, remaining_dist) {
+function pushNotification(user_id, remaining_dist, station_name) {
 	console.log('Sending push notification ...')
 	let url = process.env['PUSH_URL'];
-	let data = {userId: userId, remainingDist : remaining_dist};
+	let data = {
+		userId: user_id,
+		remainingDist : remaining_dist,
+		stationName : station_name
+	};
 
 	fetch(url, {
 	  method: 'POST',
