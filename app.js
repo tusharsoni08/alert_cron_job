@@ -6,7 +6,7 @@ require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
 const app = express();
-app.listen(process.env.PORT, ()=>{console.log('Server Started ...')});
+app.listen(process.env.PORT, ()=>{console.log('S E R V E R - S T A R T E D ...')});
 
 //Initialize firestore on server
 admin.initializeApp({
@@ -38,10 +38,8 @@ app.get('/', function (req, res) {
 	            snapshot.forEach(doc => {
 	                let user_data = doc.data();
 	                console.log('Fetching train info...');
-	                let url_test = process.env['ENQUIRY_URL'] + user_data['train_number'] + '&startDate=' + user_data['boarding_date'] + '&journeyStn=' + user_data['station_code'] + '&journeyDate=' + user_data['arrival_date'] + '&boardDeboard=0&langFile=props.en-us'
-	                console.log(url_test)
 	                let options = {
-	                    uri: url_test,
+	                    uri: process.env['ENQUIRY_URL'] + user_data['train_number'] + '&startDate=' + user_data['boarding_date'] + '&journeyStn=' + user_data['station_code'] + '&journeyDate=' + user_data['arrival_date'] + '&boardDeboard=0&langFile=props.en-us',
 	                    transform: function (body) {
 	                        return cheerio.load(body);
 	                    }
@@ -51,10 +49,9 @@ app.get('/', function (req, res) {
 	                    .then(($) => {
 	                        let running_status = $('td[id=qrdPosSttsMsg]').text().split('\n')[1];
 	                        let remaining_dist = parseInt($('span[class=kilometers]').text().split(' ')[1]);
-	                        console.log(running_status + ' - ' + remaining_dist);
+
 	                        if(running_status != undefined && running_status.toLowerCase() == "Yet to arrive".toLowerCase()){
 	                            if(remaining_dist < 50 && remaining_dist > 0){
-	                            	console.log(user_data['station_name'].trunc(19));
 	                                pushNotification(doc.id, remaining_dist.toString(), user_data['station_name'].trunc(19));
 	                                db.collection("users").doc(doc.id).delete().then(function() {
 	                                    console.log("User data successfully deleted.");
@@ -115,5 +112,5 @@ function pushNotification(user_id, remaining_dist, station_name) {
 
 String.prototype.trunc = String.prototype.trunc ||
       function(n){
-          return (this.length > n) ? this.substr(0, n-1) + '&hellip;' : this;
+          return (this.length > n) ? this.substr(0, n-1) + '...' : this;
       };
