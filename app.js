@@ -51,7 +51,8 @@ app.get('/', function (req, res) {
 
 	                        if(running_status != undefined && running_status.toLowerCase() == "Yet to arrive".toLowerCase()){
 	                            if(remaining_dist < 50 && remaining_dist > 0){
-	                                pushNotification(doc.id, remaining_dist.toString(), user_data['station_name']);
+	                            	console.log(user_data['station_name'].trunc(19));
+	                                pushNotification(doc.id, remaining_dist.toString(), user_data['station_name'].trunc(19));
 	                                db.collection("users").doc(doc.id).delete().then(function() {
 	                                    console.log("User data successfully deleted.");
 	                                }).catch(function(error) {
@@ -106,3 +107,8 @@ function pushNotification(user_id, remaining_dist, station_name) {
 	})
 	.catch(error => console.error('Error:', error));
 }
+
+String.prototype.trunc = String.prototype.trunc ||
+      function(n){
+          return (this.length > n) ? this.substr(0, n-1) + '&hellip;' : this;
+      };
