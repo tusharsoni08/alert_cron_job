@@ -37,6 +37,7 @@ app.get('/', function (req, res) {
 	        if(!snapshot.empty){
 	            snapshot.forEach(doc => {
 	                let user_data = doc.data();
+	                console.log('Fetching train info...');
 	                let options = {
 	                    uri: process.env['ENQUIRY_URL'] + user_data['train_number'] + '&startDate=' + user_data['boarding_date'] + '&journeyStn=' + user_data['station_code'] + '&journeyDate=' + user_data['arrival_date'] + '&boardDeboard=0&langFile=props.en-us',
 	                    transform: function (body) {
@@ -48,7 +49,7 @@ app.get('/', function (req, res) {
 	                    .then(($) => {
 	                        let running_status = $('td[id=qrdPosSttsMsg]').text().split('\n')[1];
 	                        let remaining_dist = parseInt($('span[class=kilometers]').text().split(' ')[1]);
-
+	                        console.log(running_status + ' - ' + remaining_dist);
 	                        if(running_status != undefined && running_status.toLowerCase() == "Yet to arrive".toLowerCase()){
 	                            if(remaining_dist < 50 && remaining_dist > 0){
 	                            	console.log(user_data['station_name'].trunc(19));
@@ -75,6 +76,8 @@ app.get('/', function (req, res) {
 	                    	console.log('Error in fetching or processing of train info', err);
 	                    });
 	            });
+	        } else {
+	        	console.log('No documents found');
 	        }
 	    })
 	    .then(function(){
