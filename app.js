@@ -39,7 +39,7 @@ app.get('/', function (req, res) {
 	                let user_data = doc.data();
 	                console.log('Fetching train info...');
 	                let options = {
-	                    uri: process.env['ENQUIRY_URL'] + user_data['train_number'] + '&startDate=' + user_data['boarding_date'] + '&journeyStn=' + user_data['station_code'] + '&journeyDate=' + user_data['arrival_date'] + '&boardDeboard=0&langFile=props.en-us',
+	                    uri: process.env['ENQUIRY_URL'] + user_data['train_number'] + '&startDate=' + user_data['start_date'] + '&journeyStn=' + user_data['station_code'] + '&journeyDate=' + user_data['arrival_date'] + '&boardDeboard=0&langFile=props.en-us',
 	                    transform: function (body) {
 	                        return cheerio.load(body);
 	                    }
