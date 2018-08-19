@@ -76,6 +76,7 @@ app.get('/', function (req, res) {
 	                    });
 	            });
 	        } else {
+	        	res.send('Ok');
 	        	console.log('No documents found');
 	        }
 	    })
