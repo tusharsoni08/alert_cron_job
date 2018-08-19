@@ -59,7 +59,7 @@ app.get('/', function (req, res) {
 	                                    console.error("Error removing document: ", error);
 	                                });
 	                            } else {
-	                            	if(remaining_dist != user_data['remaining_dist']){
+	                            	if(remaining_dist != user_data['remaining_dist'] && remaining_dist < 200){
 	                            		let userRef = db.collection('users').doc(doc.id);
 	                                	let updateDistance = userRef.update({ remaining_dist: remaining_dist });
 	                                	console.log("Successfully updated the remaining distance.");
