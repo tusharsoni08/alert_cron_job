@@ -51,8 +51,14 @@ app.get('/', function (req, res) {
 	                        let remaining_dist = parseInt($('span[class=kilometers]').text().split(' ')[1]);
 
 	                        if(running_status != undefined && running_status.toLowerCase() == "Yet to arrive".toLowerCase()){
-	                            if(remaining_dist < 35 && remaining_dist > 0){
-	                                pushNotification(doc.id, remaining_dist.toString(), user_data['station_name'].trunc(19));
+	                            if(Number.isNaN(remaining_dist) || (remaining_dist < 35 && remaining_dist > 0)){
+	                                if (Number.isNaN(remaining_dist)){
+	                                	remaining_dist = 2;
+	                                	pushNotification(doc.id, remaining_dist.toString(), user_data['station_name'].trunc(19));
+	                                } else {
+	                                	pushNotification(doc.id, remaining_dist.toString(), user_data['station_name'].trunc(19));
+	                                }
+	                                
 	                                db.collection("users").doc(doc.id).delete().then(function() {
 	                                    console.log("User data successfully deleted.");
 	                                }).catch(function(error) {
